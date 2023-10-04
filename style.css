@@ -1,3 +1,14 @@
+@page {
+    size: A4;
+    margin: 0;
+  }
+  @media print {
+    html, body {
+      width: 210mm;
+      height: 297mm;
+    }
+  }
+
 .frame {
     border: 0.5mm solid black;
     display:inline-block;
@@ -8,6 +19,7 @@
     border: 0.5mm solid black;
     height: 65mm;
     width: 120mm;
+    margin: 5mm;
     font-family: 'Courier New', Courier, monospace;
     font-size: x-small;
 }

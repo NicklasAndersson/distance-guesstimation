@@ -37,5 +37,15 @@ window.onload = function ()
     createGroup("imfC", 2.9, 2.44, distances, document.getElementById("imf"));
     createGroup("v70C", 1.44, 4.72, distances, document.getElementById("v70"));
     
+    const original = document.getElementsByClassName("card")[0];
+    
+    const clone1 = original.cloneNode(true);
+    original.parentNode.appendChild(clone1);
+
+    const clone2 = original.cloneNode(true);
+    original.parentNode.appendChild(clone2);
+
+    const clone3 = original.cloneNode(true);
+    original.parentNode.appendChild(clone3);
 } 
 
