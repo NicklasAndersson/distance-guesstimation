@@ -27,8 +27,6 @@ const createGroup = function(clazz, height, width, distances, parent){
     }
 }
 
-
-
 window.onload = function ()
 {
     const distances = [100, 200, 300, 400, 500, 600]

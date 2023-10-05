@@ -8,7 +8,8 @@ app.get('/export/pdf', (req, res) => {
     (async () => {
         const browser = await puppeteer.launch()
         const page = await browser.newPage()
-        await page.goto('http://localhost:3000/export/html')
+        await page.goto('http://localhost:3000/export/html', {waitUntil: "load"})
+        await new Promise(r => setTimeout(r, 2000));
         const buffer = await page.pdf(
             {format: 'A4', 
             landscape: false, 
