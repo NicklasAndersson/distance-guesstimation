@@ -1,10 +1,7 @@
 const cordLenghtMM = 600; 
-const stringL = 1/cordLenghtMM;//1.667;
-//((föremål / avstånd) / snörfraktion) * skala
-//const m2mm = 1000;
 
 const calcToPaperLength = function (thingLenghtMeter, distanceMeter) {
-    var tr = ((thingLenghtMeter / distanceMeter) / stringL); //* m2mm
+    var tr = ((thingLenghtMeter / distanceMeter) / (1 / cordLenghtMM)); 
     return tr;
 } 
 
