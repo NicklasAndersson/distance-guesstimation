@@ -2,6 +2,7 @@ const express = require('express')
 const puppeteer = require('puppeteer')
 const app = express()
 
+
 app.use('/export/html', express.static(__dirname + '/public'));
 
 app.get('/export/pdf', (req, res) => {
@@ -20,11 +21,4 @@ app.get('/export/pdf', (req, res) => {
     })()
 })
 
-const io = require('socket.io')(server);
-io.on('connection', (socketServer) => {
-  socketServer.on('npmStop', () => {
-    process.exit(0);
-  });
-});
-
-app.listen(3000)
+const server = app.listen(3000);
