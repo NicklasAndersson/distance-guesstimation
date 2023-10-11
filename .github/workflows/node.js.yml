@@ -1,0 +1,29 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20
+        cache: 'npm'
+    - run: npm install
+    - run: npm start
+    - run: curl localhost:3000/export/pdf --output result.pdf
+    - name: Archive pdf
+      uses: actions/upload-artifact@v3
+      with:
+        name: resultat
+        path: result.pdf
+      
