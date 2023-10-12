@@ -22,7 +22,7 @@ jobs:
     - run: npm start
     - run: ps
     - run: curl localhost:3000/export/html/
-    - run: curl localhost:3000/export/pdf/ --max-time 30 --retry 2 --output result.pdf
+    - run: curl localhost:3000/export/pdf/
     - name: Archive pdf
       uses: actions/upload-artifact@v3
       with:
