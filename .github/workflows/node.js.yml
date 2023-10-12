@@ -28,4 +28,9 @@ jobs:
       with:
         name: resultat
         path: result.pdf
+    - name: Archive pdf
+      uses: actions/upload-artifact@v3
+      with:
+        name: log
+        path: node.log
       
