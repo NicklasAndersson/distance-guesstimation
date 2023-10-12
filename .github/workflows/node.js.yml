@@ -21,14 +21,12 @@ jobs:
     - run: npm install
     - run: npm start
     - run: ps
-    - run: curl localhost:3000/export/html/
-    - run: curl localhost:3000/export/pdf/
     - name: Archive pdf
       uses: actions/upload-artifact@v3
       with:
         name: resultat
-        path: result.pdf
-    - name: Archive pdf
+        path: cards.pdf
+    - name: Archive log
       uses: actions/upload-artifact@v3
       with:
         name: log
