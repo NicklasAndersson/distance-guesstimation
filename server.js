@@ -1,5 +1,6 @@
 const express = require('express')
 const puppeteer = require('puppeteer')
+const fs = require('fs');
 const app = express()
 
 
@@ -16,10 +17,16 @@ app.get('/export/pdf', (req, res) => {
         const buffer = await page.pdf(
             {format: 'A4', 
             landscape: false, 
-            printBackground: true})
-        res.type('application/pdf')
-        res.send(buffer)
-        browser.close()
+            printBackground: true});
+        fs.writeFile('cards.pdf', buffer, err => {
+            if (err) {
+                console.error(err);
+            }
+                // file written successfully
+        });
+        //res.type('application/pdf')
+        res.send();
+        browser.close();
         console.log("done");
     })()
 })
