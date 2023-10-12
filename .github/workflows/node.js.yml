@@ -20,7 +20,7 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm start
-    - run: sleep 2 && curl localhost:3000/export/pdf --output result.pdf
+    - run: curl localhost:3000/export/pdf --max-time 30 --retry 2 --output result.pdf
     - name: Archive pdf
       uses: actions/upload-artifact@v3
       with:
