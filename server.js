@@ -36,9 +36,9 @@ const server = app.listen(3000);
 const run = () => {
     (async () => {
         console.log("/export/pdf");
-        const browser = await puppeteer.launch()
-        const page = await browser.newPage()
-        await page.goto('http://localhost:3000/export/html/', {waitUntil: "load"})
+        const browser = await puppeteer.launch({headless: true});
+        const page = await browser.newPage();
+        await page.goto('http://localhost:3000/export/html/', {waitUntil: "load"});
         console.log("pageload");
         await new Promise(r => setTimeout(r, 2000));
         const buffer = await page.pdf(
