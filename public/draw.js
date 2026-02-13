@@ -110,7 +110,7 @@ function renderCard() {
 
             const label = document.createElement('p');
             const moaVal = round3(milsToMoa(thing.milDiameter));
-            label.textContent = `${thing.name} (${thing.milDiameter} mil / ${moaVal} MOA)`;
+            label.textContent = `${thing.name} (${round3(thing.milDiameter)} mil / ${moaVal} MOA)`;
             subcard.appendChild(label);
 
             const circle = document.createElement('div');
@@ -381,8 +381,8 @@ function wireEditor() {
             thing.offsetY = getNumVal('thing-offsetY');
             if (thing.type === 'milCircle') {
                 if (field === 'thing-moaDiameter') {
-                    // MOA changed → convert to mils
-                    thing.milDiameter = round3(moaToMils(getNumVal('thing-moaDiameter')));
+                    // MOA changed → convert to mils (store full precision)
+                    thing.milDiameter = moaToMils(getNumVal('thing-moaDiameter'));
                     setVal('thing-milDiameter', round3(thing.milDiameter));
                 } else {
                     // Mils changed → update MOA
