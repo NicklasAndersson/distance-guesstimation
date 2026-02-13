@@ -1,6 +1,13 @@
 {
   "cordLength": 600,
-  "distances": [100, 200, 300, 400, 500, 600],
+  "distances": [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600
+  ],
   "things": [
     {
       "id": "soldier",
@@ -8,8 +15,8 @@
       "height": 1.8,
       "width": 0.5,
       "imageDataUrl": "",
-      "offsetX": 1,
-      "offsetY": 7
+      "offsetX": 5.074033621140852,
+      "offsetY": 13.571021969582018
     },
     {
       "id": "imf",
@@ -17,17 +24,17 @@
       "height": 2.9,
       "width": 2.44,
       "imageDataUrl": "",
-      "offsetX": 25,
-      "offsetY": 7
+      "offsetX": 41.82181624212997,
+      "offsetY": 7.525681757566562
     },
     {
       "id": "doorFrame",
       "name": "Dörr",
-      "height": 2.0,
-      "width": 1.0,
+      "height": 2,
+      "width": 1,
       "imageDataUrl": "",
-      "offsetX": 55,
-      "offsetY": 7
+      "offsetX": 5.980176106918154,
+      "offsetY": 42.35209819635126
     },
     {
       "id": "v70",
@@ -35,8 +42,8 @@
       "height": 1.44,
       "width": 4.72,
       "imageDataUrl": "",
-      "offsetX": 1,
-      "offsetY": 38
+      "offsetX": 38.98050698418407,
+      "offsetY": 45.62238548471514
     }
   ]
 }
