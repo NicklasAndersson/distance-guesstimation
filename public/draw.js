@@ -102,30 +102,54 @@ function renderCard() {
         subcard.style.left = thing.offsetX + 'mm';
         subcard.style.top  = thing.offsetY + 'mm';
 
-        // Label
-        const label = document.createElement('p');
-        label.textContent = `${thing.name} (h=${thing.height}m b=${thing.width}m)`;
-        subcard.appendChild(label);
+        if (thing.type === 'milCircle') {
+            // ── Mil Circle ──────────────────────────────────
+            const paperDiameterMM = (thing.milDiameter / 1000) * cardData.cordLength;
 
-        // Scaled frames for each distance
-        for (let i = 0; i < cardData.distances.length; i++) {
-            const dist = cardData.distances[i];
-            const frame = document.createElement('div');
-            frame.classList.add('frame');
-            frame.style.width  = calcToPaperLength(thing.width,  dist, cardData.cordLength) + 'mm';
-            frame.style.height = calcToPaperLength(thing.height, dist, cardData.cordLength) + 'mm';
+            const label = document.createElement('p');
+            label.textContent = `${thing.name} (${thing.milDiameter} mils)`;
+            subcard.appendChild(label);
 
-            // First frame gets background image
-            if (i === 0) {
-                const imgUrl = thing.imageDataUrl || (LEGACY_IMAGES[thing.id] ? LEGACY_IMAGES[thing.id] : '');
-                if (imgUrl) {
-                    frame.style.backgroundImage  = `url("${imgUrl}")`;
-                    frame.style.backgroundSize   = '100% 100%';
-                    frame.style.backgroundRepeat = 'no-repeat';
+            const circle = document.createElement('div');
+            circle.classList.add('mil-circle');
+            circle.style.width  = paperDiameterMM + 'mm';
+            circle.style.height = paperDiameterMM + 'mm';
+            subcard.appendChild(circle);
+
+            // Crosshair lines inside circle
+            const hLine = document.createElement('div');
+            hLine.classList.add('mil-crosshair-h');
+            circle.appendChild(hLine);
+            const vLine = document.createElement('div');
+            vLine.classList.add('mil-crosshair-v');
+            circle.appendChild(vLine);
+
+        } else {
+            // ── Regular object ───────────────────────────────
+            const label = document.createElement('p');
+            label.textContent = `${thing.name} (h=${thing.height}m b=${thing.width}m)`;
+            subcard.appendChild(label);
+
+            // Scaled frames for each distance
+            for (let i = 0; i < cardData.distances.length; i++) {
+                const dist = cardData.distances[i];
+                const frame = document.createElement('div');
+                frame.classList.add('frame');
+                frame.style.width  = calcToPaperLength(thing.width,  dist, cardData.cordLength) + 'mm';
+                frame.style.height = calcToPaperLength(thing.height, dist, cardData.cordLength) + 'mm';
+
+                // First frame gets background image
+                if (i === 0) {
+                    const imgUrl = thing.imageDataUrl || (LEGACY_IMAGES[thing.id] ? LEGACY_IMAGES[thing.id] : '');
+                    if (imgUrl) {
+                        frame.style.backgroundImage  = `url("${imgUrl}")`;
+                        frame.style.backgroundSize   = '100% 100%';
+                        frame.style.backgroundRepeat = 'no-repeat';
+                    }
                 }
-            }
 
-            subcard.appendChild(frame);
+                subcard.appendChild(frame);
+            }
         }
 
         card.appendChild(subcard);
@@ -242,11 +266,36 @@ function selectThing(thingId) {
 }
 
 function populateThingFields(thing) {
+    const isMil = thing.type === 'milCircle';
+
     setVal('thing-name',    thing.name);
-    setVal('thing-height',  thing.height);
-    setVal('thing-width',   thing.width);
     setVal('thing-offsetX', Math.round(thing.offsetX * 10) / 10);
     setVal('thing-offsetY', Math.round(thing.offsetY * 10) / 10);
+
+    // Show/hide fields based on type
+    toggleFieldVisibility('thing-height',      !isMil);
+    toggleFieldVisibility('thing-width',       !isMil);
+    toggleFieldVisibility('thing-milDiameter', isMil);
+    toggleFieldVisibility('thing-image',       !isMil);
+    toggleFieldVisibility('clear-image-btn',   !isMil);
+
+    if (isMil) {
+        setVal('thing-milDiameter', thing.milDiameter);
+    } else {
+        setVal('thing-height', thing.height);
+        setVal('thing-width',  thing.width);
+    }
+}
+
+function toggleFieldVisibility(id, visible) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Hide the label too (previous sibling if it's a <label>)
+    const prev = el.previousElementSibling;
+    if (prev && prev.tagName === 'LABEL') {
+        prev.style.display = visible ? '' : 'none';
+    }
+    el.style.display = visible ? '' : 'none';
 }
 
 function populateGlobalFields() {
@@ -261,7 +310,8 @@ function populateThingSelect() {
     for (const thing of cardData.things) {
         const opt = document.createElement('option');
         opt.value = thing.id;
-        opt.textContent = thing.name;
+        const prefix = thing.type === 'milCircle' ? '⊕ ' : '';
+        opt.textContent = prefix + thing.name;
         sel.appendChild(opt);
     }
     if (selectedThingId) sel.value = selectedThingId;
@@ -313,16 +363,20 @@ function wireEditor() {
     });
 
     // Thing property fields
-    for (const field of ['thing-name', 'thing-height', 'thing-width', 'thing-offsetX', 'thing-offsetY']) {
+    for (const field of ['thing-name', 'thing-height', 'thing-width', 'thing-milDiameter', 'thing-offsetX', 'thing-offsetY']) {
         on(field, 'change', () => {
             const thing = getSelectedThing();
             if (!thing) return;
             pushUndo();
             thing.name    = getVal('thing-name');
-            thing.height  = getNumVal('thing-height');
-            thing.width   = getNumVal('thing-width');
             thing.offsetX = getNumVal('thing-offsetX');
             thing.offsetY = getNumVal('thing-offsetY');
+            if (thing.type === 'milCircle') {
+                thing.milDiameter = getNumVal('thing-milDiameter');
+            } else {
+                thing.height  = getNumVal('thing-height');
+                thing.width   = getNumVal('thing-width');
+            }
             populateThingSelect();
             renderCard();
             autoSave();
@@ -384,6 +438,25 @@ function wireEditor() {
             height: 1.8,
             width: 1.0,
             imageDataUrl: '',
+            offsetX: 0,
+            offsetY: 0,
+        });
+        selectedThingId = id;
+        populateThingSelect();
+        selectThing(id);
+        renderCard();
+        autoSave();
+    });
+
+    // Add mil circle
+    on('add-circle-btn', 'click', () => {
+        pushUndo();
+        const id = 'circle_' + Date.now();
+        cardData.things.push({
+            id,
+            type: 'milCircle',
+            name: 'Ny cirkel',
+            milDiameter: 5,
             offsetX: 0,
             offsetY: 0,
         });
@@ -559,9 +632,20 @@ function importJSON(e) {
             }
             // Validate each thing has required fields
             for (const t of parsed.things) {
-                if (!t.id || !t.name || typeof t.height !== 'number' || typeof t.width !== 'number') {
-                    alert(`Ogiltigt objekt: "${t.name || t.id || '?'}" – saknar obligatoriska fält.`);
+                if (!t.id || !t.name) {
+                    alert(`Ogiltigt objekt: "${t.name || t.id || '?'}" – saknar id/namn.`);
                     return;
+                }
+                if (t.type === 'milCircle') {
+                    if (typeof t.milDiameter !== 'number' || t.milDiameter <= 0) {
+                        alert(`Ogiltigt milcirkel-objekt: "${t.name}" – saknar giltig milDiameter.`);
+                        return;
+                    }
+                } else {
+                    if (typeof t.height !== 'number' || typeof t.width !== 'number') {
+                        alert(`Ogiltigt objekt: "${t.name}" – saknar höjd/bredd.`);
+                        return;
+                    }
                 }
                 // Ensure offset fields exist
                 t.offsetX = t.offsetX || 0;
