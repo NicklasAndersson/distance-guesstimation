@@ -1,30 +1,20 @@
 #!/usr/bin/env node
 // ── generate-pdf.js ─────────────────────────────────────────────────────────
-// Starts the Express server, copies card.json into public/, renders the page
-// with Puppeteer, saves cards.pdf, and exits.
+// Starts the Express server, renders the page with Puppeteer, saves cards.pdf,
+// and exits. The page loads public/card.json automatically as seed data.
 //
-// Usage:  node generate-pdf.js [card.json] [output.pdf]
+// Usage:  node generate-pdf.js [output.pdf]
 
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const puppeteer = require('puppeteer');
 
-const cardPath  = path.resolve(process.argv[2] || 'card.json');
-const outputPdf = path.resolve(process.argv[3] || 'cards.pdf');
+const outputPdf = path.resolve(process.argv[2] || 'cards.pdf');
 const publicDir = path.join(__dirname, 'public');
-const tmpCard   = path.join(publicDir, 'card.json');
 
 async function main() {
-    // 1. Copy card.json into public/ so the page can fetch it
-    if (!fs.existsSync(cardPath)) {
-        console.error(`Card file not found: ${cardPath}`);
-        process.exit(1);
-    }
-    fs.copyFileSync(cardPath, tmpCard);
-    console.log(`Copied ${cardPath} → ${tmpCard}`);
-
-    // 2. Start server
+    // 1. Start server
     const app = express();
     app.use(express.static(publicDir));
     const server = await new Promise(resolve => {
@@ -33,7 +23,7 @@ async function main() {
     const port = server.address().port;
     console.log(`Server listening on port ${port}`);
 
-    // 3. Launch Puppeteer and generate PDF
+    // 2. Launch Puppeteer and generate PDF
     let browser;
     try {
         browser = await puppeteer.launch({
@@ -56,8 +46,6 @@ async function main() {
     } finally {
         if (browser) await browser.close();
         server.close();
-        // Clean up temporary file
-        try { fs.unlinkSync(tmpCard); } catch (_) {}
     }
 }
 

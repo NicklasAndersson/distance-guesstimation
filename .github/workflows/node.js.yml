@@ -4,7 +4,6 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "card.json"
       - "public/**"
       - "generate-pdf.js"
       - ".github/workflows/node.js.yml"
