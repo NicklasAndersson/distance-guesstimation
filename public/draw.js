@@ -3,12 +3,7 @@
 const DEFAULT_CARD_DATA = {
     cordLength: 600,
     distances: [100, 200, 300, 400, 500, 600],
-    things: [
-        { id: 'soldier',  name: 'Soldat',                   height: 1.8,  width: 0.5,  imageDataUrl: '', offsetX: 1,  offsetY: 7  },
-        { id: 'imf',      name: 'Container kortsida ISO HC', height: 2.9,  width: 2.44, imageDataUrl: '', offsetX: 25, offsetY: 7  },
-        { id: 'doorFrame',name: 'Dörr',                      height: 2.0,  width: 1.0,  imageDataUrl: '', offsetX: 55, offsetY: 7  },
-        { id: 'v70',      name: 'Volvo V70',                 height: 1.44, width: 4.72, imageDataUrl: '', offsetX: 1,  offsetY: 38 },
-    ]
+    things: []
 };
 
 // Legacy image map – used when a thing has no uploaded imageDataUrl
@@ -490,18 +485,15 @@ function wireEditor() {
 
     // Delete thing
     on('delete-thing-btn', 'click', () => {
-        if (cardData.things.length <= 1) {
-            alert('Minst ett objekt krävs.');
-            return;
-        }
+        if (cardData.things.length === 0) return;
         const thing = getSelectedThing();
         if (!thing) return;
         if (!confirm(`Ta bort "${thing.name}"?`)) return;
         pushUndo();
         cardData.things = cardData.things.filter(t => t.id !== thing.id);
-        selectedThingId = cardData.things[0].id;
+        selectedThingId = cardData.things[0]?.id || null;
         populateThingSelect();
-        selectThing(selectedThingId);
+        if (selectedThingId) selectThing(selectedThingId);
         renderCard();
         autoSave();
     });
@@ -647,7 +639,7 @@ function importJSON(e) {
     reader.onload = () => {
         try {
             const parsed = JSON.parse(reader.result);
-            if (!parsed || !Array.isArray(parsed.things) || parsed.things.length === 0) {
+            if (!parsed || !Array.isArray(parsed.things)) {
                 alert('Ogiltig JSON-fil – saknar "things"-array.');
                 return;
             }
