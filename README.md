@@ -13,6 +13,22 @@ npm start          # http://localhost:3000
 
 Open the editor in a browser. When done, click **🖨 Förhandsgranska A4** or use `Ctrl+P` to print.
 
+### Cloudflare Workers
+
+```bash
+npm run dev        # local dev at http://localhost:8787
+npm run deploy     # deploy to Cloudflare
+```
+
+### Generate PDF from card.json
+
+```bash
+npm run generate-pdf                        # uses card.json → cards.pdf
+node generate-pdf.js custom.json out.pdf    # custom input/output
+```
+
+The GitHub Actions pipeline automatically generates a PDF from `card.json` and attaches it to a release on every push to main.
+
 ## Formulas
 
 ### Distance estimation (objects)
@@ -77,14 +93,17 @@ The editor supports entering circle diameter in either unit; the other updates a
 - **Persistence** – auto-saves to localStorage
 - **JSON export / import** – download or load full card configurations
 - **Print preview** – exact A4 layout preview; one design × 4 copies per page
-- **PDF export** – server-side via Puppeteer (`GET /export/pdf`)
+- **PDF generation** – `card.json` → Puppeteer → `cards.pdf` (CI pipeline or local)
+- **Cloudflare Workers** – deploy as static site with `npm run deploy`
 
 ## Tech stack
 
 - Vanilla JS (no framework)
-- Express 4 + Puppeteer (server / PDF)
+- Express 4 + Puppeteer (local server / PDF generation)
+- Cloudflare Workers (static asset deployment)
 - CSS `mm` units for print-accurate rendering
 - paper.css for A4 sheet layout
+- GitHub Actions CI → PDF release
 
 ## License
 
