@@ -1,52 +1,45 @@
+/* ── Card Layout (print-accurate, mm units) ─────────────────────────────── */
 
 .frame {
     border: 0.5mm solid black;
-    display:inline-block;
+    display: inline-block;
     margin-right: 0.5mm;
 }
 
-.card{
+.card {
     border: 0.5mm solid black;
     height: 65mm;
     width: 120mm;
     margin: 2.5mm;
     font-family: 'Courier New', Courier, monospace;
     font-size: x-small;
+    position: relative;
+    overflow: hidden;
 }
 
-.v70C:first-of-type {
-    background-image: url("volvo-v70-e.jpg");
-    background-color: transparent;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-
-.soldierC:first-of-type {
-    background-image: url("helfigur-bw.png");
-    background-color: transparent;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-
-.imfC:first-of-type {
-    background-image: url("imf-bw.jpg");
-    background-color: transparent;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-
-.top-text{
+.top-text {
     text-align: center;
 }
 
-.subcard{
-    margin: 1mm;
+.subcard {
     font-family: 'Courier New', Courier, monospace;
     font-size: x-small;
-    display: inline-block;
+    position: absolute;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
 }
 
-.ruler{
+.subcard:active {
+    cursor: grabbing;
+}
+
+.subcard.selected {
+    outline: 1.5px dashed #2563eb;
+    outline-offset: 1px;
+}
+
+.ruler {
     height: 50mm;
     width: 10mm;
     float: right;
@@ -54,7 +47,7 @@
     bottom: 0;
 }
 
-.cm{
+.cm {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -66,4 +59,245 @@
 
 .last-cm {
     border-bottom: 0.5mm solid black;
+}
+
+/* ── Mil Circle ─────────────────────────────────────────────────────────── */
+
+.mil-circle {
+    border: 0.5mm solid black;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.mil-crosshair-h,
+.mil-crosshair-v {
+    position: absolute;
+    background: black;
+}
+
+.mil-crosshair-h {
+    width: 100%;
+    height: 0.3mm;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.mil-crosshair-v {
+    height: 100%;
+    width: 0.3mm;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+/* ── Editor Panel ───────────────────────────────────────────────────────── */
+
+.editor-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-right: 1px solid #ccc;
+    padding: 12px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    z-index: 1000;
+    color: #1a1a1a;
+}
+
+.editor-panel h2 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+}
+
+.editor-panel fieldset {
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin: 0 0 10px 0;
+}
+
+.editor-panel legend {
+    font-weight: 600;
+    font-size: 12px;
+    color: #555;
+    padding: 0 4px;
+}
+
+.editor-panel label {
+    display: block;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    font-size: 11px;
+    color: #444;
+    font-weight: 500;
+}
+
+.editor-panel input[type="text"],
+.editor-panel input[type="number"],
+.editor-panel select {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+.editor-panel input[type="file"] {
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 12px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    color: #333;
+    text-align: center;
+}
+
+.btn:hover {
+    background: #e9ecef;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.btn-danger {
+    color: #c0392b;
+    border-color: #e0a9a4;
+}
+
+.btn-danger:hover {
+    background: #fdecea;
+}
+
+.btn-small {
+    padding: 3px 8px;
+    font-size: 11px;
+}
+
+.btn-file {
+    display: inline-block;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.btn-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.btn-row .btn {
+    flex: 1;
+}
+
+/* ── Screen: make room for the editor panel ─────────────────────────────── */
+
+@media screen {
+    body {
+        margin-left: 260px;
+    }
+}
+
+/* ── Print Preview mode (on-screen exact A4) ───────────────────────────── */
+
+body.print-mode {
+    margin-left: 0 !important;
+    background: #555;
+}
+
+body.print-mode .editor-panel {
+    display: none;
+}
+
+body.print-mode .subcard {
+    cursor: default;
+}
+
+body.print-mode .subcard.selected {
+    outline: none;
+}
+
+.print-mode-bar {
+    display: none;
+}
+
+body.print-mode .print-mode-bar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: #1a1a1a;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    z-index: 2000;
+}
+
+body.print-mode .print-mode-bar button {
+    padding: 5px 14px;
+    border: 1px solid #888;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+body.print-mode .print-mode-bar button:hover {
+    background: #555;
+}
+
+body.print-mode .sheet {
+    margin: 50px auto 10px auto;
+}
+
+/* ── Print: hide editor, reset margins ──────────────────────────────────── */
+
+@media print {
+    .editor-panel,
+    .print-mode-bar {
+        display: none !important;
+    }
+
+    body {
+        margin-left: 0 !important;
+        background: #fff !important;
+    }
+
+    .sheet {
+        margin: 0 !important;
+    }
+
+    .subcard {
+        cursor: default;
+    }
+
+    .subcard.selected {
+        outline: none;
+    }
 }

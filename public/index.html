@@ -1,40 +1,105 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Avståndsgissning</title>
+        <meta charset="UTF-8">
+        <title>Avståndsgissning – Editor</title>
         <link rel="stylesheet" href="paper.css">
-        <script type="text/javascript" src="draw.js"></script>
-        <link rel="stylesheet" href="style.css"> 
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body class="A4">
+
+        <!-- ── Editor Panel (hidden when printing) ── -->
+        <div class="editor-panel">
+            <h2>Kortredigerare</h2>
+
+            <fieldset>
+                <legend>Globala inställningar</legend>
+                <label for="cord-length">Snöre (mm)</label>
+                <input type="number" id="cord-length" min="1" step="10">
+
+                <label for="distances">Avstånd (m, komma-sep.)</label>
+                <input type="text" id="distances" placeholder="100, 200, 300, …">
+            </fieldset>
+
+            <fieldset>
+                <legend>Objekt</legend>
+                <label for="thing-select">Välj objekt</label>
+                <select id="thing-select"></select>
+
+                <label for="thing-name">Namn</label>
+                <input type="text" id="thing-name">
+
+                <label for="thing-height">Höjd (m)</label>
+                <input type="number" id="thing-height" min="0" step="0.01">
+
+                <label for="thing-width">Bredd (m)</label>
+                <input type="number" id="thing-width" min="0" step="0.01">
+
+                <label for="thing-milDiameter">Diameter (mils)</label>
+                <input type="number" id="thing-milDiameter" min="0.001" step="0.001">
+
+                <label for="thing-moaDiameter">Diameter (MOA)</label>
+                <input type="number" id="thing-moaDiameter" min="0.001" step="0.001">
+
+                <label for="thing-offsetX">Offset X (mm)</label>
+                <input type="number" id="thing-offsetX" step="0.5">
+
+                <label for="thing-offsetY">Offset Y (mm)</label>
+                <input type="number" id="thing-offsetY" step="0.5">
+
+                <label for="thing-image">Bild</label>
+                <input type="file" id="thing-image" accept="image/*">
+                <button id="clear-image-btn" class="btn btn-small">Rensa bild</button>
+
+                <div class="btn-row">
+                    <button id="add-thing-btn" class="btn">＋ Objekt</button>
+                    <button id="add-circle-btn" class="btn">⊕ Cirkel</button>
+                    <button id="delete-thing-btn" class="btn btn-danger">✕ Ta bort</button>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Historik</legend>
+                <div class="btn-row">
+                    <button id="undo-btn" class="btn" disabled>↩ Ångra</button>
+                    <button id="redo-btn" class="btn" disabled>↪ Gör om</button>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Spara / Ladda</legend>
+                <div class="btn-row">
+                    <button id="save-btn" class="btn">💾 Spara</button>
+                    <button id="load-btn" class="btn">📂 Ladda</button>
+                </div>
+                <div class="btn-row">
+                    <button id="export-btn" class="btn">⬇ Exportera JSON</button>
+                </div>
+                <label for="import-file" class="btn btn-file">⬆ Importera JSON
+                    <input type="file" id="import-file" accept=".json" hidden>
+                </label>
+                <button id="reset-btn" class="btn btn-danger btn-small">Återställ standard</button>
+            </fieldset>
+
+            <fieldset>
+                <legend>Utskrift</legend>
+                <button id="print-mode-btn" class="btn" style="width:100%">🖨 Förhandsgranska A4</button>
+            </fieldset>
+        </div>
+
+        <!-- ── Print Mode Bar (visible only in print mode) ── -->
+        <div class="print-mode-bar">
+            <span>Förhandsgranskning – exakta A4-mått</span>
+            <button id="print-now-btn">🖨 Skriv ut</button>
+            <button id="exit-print-mode-btn">✕ Tillbaka till redigering</button>
+        </div>
+
+        <!-- ── Print Area ── -->
         <section class="sheet padding-10mm">
-            <div class="card">
-                <p class="top-text">Snöre: 60cm | Avstånd: 100, 200, 300, 400, 500, 600m</p>
-                <div class="ruler">
-                    <div class="cm"></div>
-                    <div class="cm"></div>
-                    <div class="cm"></div>
-                    <div class="cm"></div>
-                    <div class="cm last-cm"></div>
-                </div>
-
-                <div class="subcard" id="soldier">
-                    <p>Soldat (h=1.8m b=0.5m)</p>
-                </div>
-
-                <div class="subcard" id="imf">
-                    <p>Container kortsida ISO HC
-                        (h=2.9m b=2.44m)</p>
-                </div>
-        
-                <div class="subcard" id="doorFrame">
-                    <p>Dörr (h=2m b=1m)</p>
-                </div>
-
-                <div class="subcard" id="v70">
-                    <p>Volvo V70 (h=1.44m b=4.72m)</p>
-                </div>
-            </div>
+            <!-- Cards are generated dynamically by draw.js -->
         </section>
+
+        <script src="draw.js"></script>
     </body>
 </html>

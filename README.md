@@ -1,14 +1,111 @@
 # Distance Guesstimation
-Estimate distance using a plastic card on a string. You print the pdf in the release and attatch a string to get the correct 60cm distance from your eye to the card.
 
-## Practical
-Latest version in releases. 
+Estimate distance using a plastic card on a string. Print the card, attach a string of the correct length (default 60 cm), hold the card at arm's length, and compare the silhouettes to real-world objects.
 
-Please open an issue or PR if you find errors or have improvements.
+Includes a browser-based card editor for customising objects, positions, images, and angular circles.
 
-## How it works
- (objectLength/distance) / (1/cordLength) = lengthOnPaper
- I have based it on this page that explains it a bit more: https://www.exploratorium.edu/snacks/handy-measuring-tool 
+## Getting started
 
- 
- 
+```bash
+npm install
+npm start          # http://localhost:3000
+```
+
+Open the editor in a browser. When done, click **🖨 Förhandsgranska A4** or use `Ctrl+P` to print.
+
+### Cloudflare Workers
+
+```bash
+npm run dev        # local dev at http://localhost:8787
+npm run deploy     # deploy to Cloudflare
+```
+
+### Generate PDF from card.json
+
+```bash
+npm run generate-pdf                        # uses card.json → cards.pdf
+node generate-pdf.js custom.json out.pdf    # custom input/output
+```
+
+The GitHub Actions pipeline automatically generates a PDF from `card.json` and attaches it to a release on every push to main.
+
+## Formulas
+
+### Distance estimation (objects)
+
+The card works by projecting a known real-world size onto the card at a fixed cord length:
+
+```text
+paperLength (mm) = (objectSize (m) / distance (m)) × cordLength (mm)
+```
+
+Rearranged to estimate distance:
+
+```text
+distance (m) = (objectSize (m) / paperLength (mm)) × cordLength (mm)
+```
+
+Based on: <https://www.exploratorium.edu/snacks/handy-measuring-tool>
+
+### Angular circles (Mils)
+
+A milliradian (mil) is an angular unit. **1 mil = 1 m at 1 000 m distance.**
+
+Since the cord provides a fixed angular reference, a mil circle's paper size is **constant regardless of distance**:
+
+```text
+paperDiameter (mm) = (milDiameter / 1000) × cordLength (mm)
+```
+
+Useful relationships:
+
+| Distance | 1 mil covers |
+| -------- | ------------ |
+| 100 m    | 10 cm        |
+| 300 m    | 30 cm        |
+| 500 m    | 50 cm        |
+| 1 000 m  | 1 m          |
+
+Range estimation with mils:
+
+```text
+distance (m) = (targetSize (cm) × 10) / mils
+distance (m) = targetSize (m) × 1000 / mils
+```
+
+### MOA ↔ Mil conversion
+
+```text
+1 MOA ≈ 0.2909 mil
+mils  = MOA × 0.29089
+MOA   = mils / 0.29089
+```
+
+The editor supports entering circle diameter in either unit; the other updates automatically.
+
+## Features
+
+- **Object cards** – define objects by name, height, width, and optional image; scaled silhouettes are drawn for each configured distance
+- **Mil / MOA circles** – angular reference circles with crosshair, constant size on card
+- **Drag & drop** – reposition any element on the card by dragging
+- **Image upload** – attach a silhouette image (auto-resized if > 200 KB)
+- **Undo / Redo** – `Ctrl+Z` / `Ctrl+Shift+Z` (up to 50 steps)
+- **Persistence** – auto-saves to localStorage
+- **JSON export / import** – download or load full card configurations
+- **Print preview** – exact A4 layout preview; one design × 4 copies per page
+- **PDF generation** – `card.json` → Puppeteer → `cards.pdf` (CI pipeline or local)
+- **Cloudflare Workers** – deploy as static site with `npm run deploy`
+
+## Tech stack
+
+- Vanilla JS (no framework)
+- Express 4 + Puppeteer (local server / PDF generation)
+- Cloudflare Workers (static asset deployment)
+- CSS `mm` units for print-accurate rendering
+- paper.css for A4 sheet layout
+- GitHub Actions CI → PDF release
+
+## License
+
+See [LICENSE](LICENSE).
+

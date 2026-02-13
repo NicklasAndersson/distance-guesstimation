@@ -1,3 +1,4 @@
-.DS_Store
-.AppleDouble
-.LSOverride
+node_modules/
+cards.pdf
+node.log
+.wrangler/
