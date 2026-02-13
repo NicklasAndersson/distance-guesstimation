@@ -276,12 +276,35 @@ body.print-mode .sheet {
     margin: 50px auto 10px auto;
 }
 
+/* ── Print Note ─────────────────────────────────────────────────────────── */
+
+.print-note {
+    display: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    color: #444;
+    text-align: center;
+    padding: 6px 12px;
+    max-width: 210mm;
+}
+
+body.print-mode .print-note {
+    display: block;
+    margin: 48px auto 4px auto;
+}
+
 /* ── Print: hide editor, reset margins ──────────────────────────────────── */
 
 @media print {
     .editor-panel,
     .print-mode-bar {
         display: none !important;
+    }
+
+    .print-note {
+        display: block !important;
+        margin: 0 auto 2mm auto;
+        color: #666;
     }
 
     body {
