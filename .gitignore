@@ -2,3 +2,4 @@ node_modules/
 cards.pdf
 node.log
 .wrangler/
+public/card.json

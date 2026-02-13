@@ -1,0 +1,42 @@
+{
+  "cordLength": 600,
+  "distances": [100, 200, 300, 400, 500, 600],
+  "things": [
+    {
+      "id": "soldier",
+      "name": "Soldat",
+      "height": 1.8,
+      "width": 0.5,
+      "imageDataUrl": "",
+      "offsetX": 1,
+      "offsetY": 7
+    },
+    {
+      "id": "imf",
+      "name": "Container kortsida ISO HC",
+      "height": 2.9,
+      "width": 2.44,
+      "imageDataUrl": "",
+      "offsetX": 25,
+      "offsetY": 7
+    },
+    {
+      "id": "doorFrame",
+      "name": "Dörr",
+      "height": 2.0,
+      "width": 1.0,
+      "imageDataUrl": "",
+      "offsetX": 55,
+      "offsetY": 7
+    },
+    {
+      "id": "v70",
+      "name": "Volvo V70",
+      "height": 1.44,
+      "width": 4.72,
+      "imageDataUrl": "",
+      "offsetX": 1,
+      "offsetY": 38
+    }
+  ]
+}

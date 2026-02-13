@@ -678,8 +678,22 @@ function importJSON(e) {
 
 // ── Init ────────────────────────────────────────────────────────────────────
 
-window.onload = function () {
-    loadFromStorage();
+window.onload = async function () {
+    const hadLocalData = loadFromStorage();
+
+    // If no localStorage data, try loading card.json as seed
+    if (!hadLocalData) {
+        try {
+            const resp = await fetch('card.json');
+            if (resp.ok) {
+                const json = await resp.json();
+                if (json && Array.isArray(json.things)) {
+                    cardData = json;
+                }
+            }
+        } catch (_) { /* no card.json available – start empty */ }
+    }
+
     selectedThingId = cardData.things[0]?.id || null;
     populateGlobalFields();
     populateThingSelect();
