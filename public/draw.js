@@ -109,7 +109,7 @@ function renderCard() {
             const paperDiameterMM = (thing.milDiameter / 1000) * cardData.cordLength;
 
             const label = document.createElement('p');
-            const moaVal = round2(milsToMoa(thing.milDiameter));
+            const moaVal = round3(milsToMoa(thing.milDiameter));
             label.textContent = `${thing.name} (${thing.milDiameter} mil / ${moaVal} MOA)`;
             subcard.appendChild(label);
 
@@ -284,8 +284,8 @@ function populateThingFields(thing) {
     toggleFieldVisibility('clear-image-btn',   !isMil);
 
     if (isMil) {
-        setVal('thing-milDiameter', round2(thing.milDiameter));
-        setVal('thing-moaDiameter', round2(milsToMoa(thing.milDiameter)));
+        setVal('thing-milDiameter', round3(thing.milDiameter));
+        setVal('thing-moaDiameter', round3(milsToMoa(thing.milDiameter)));
     } else {
         setVal('thing-height', thing.height);
         setVal('thing-width',  thing.width);
@@ -303,7 +303,7 @@ function toggleFieldVisibility(id, visible) {
     el.style.display = visible ? '' : 'none';
 }
 
-function round2(v) { return Math.round(v * 100) / 100; }
+function round3(v) { return Math.round(v * 1000) / 1000; }
 
 function populateGlobalFields() {
     setVal('cord-length', cardData.cordLength);
@@ -382,12 +382,12 @@ function wireEditor() {
             if (thing.type === 'milCircle') {
                 if (field === 'thing-moaDiameter') {
                     // MOA changed → convert to mils
-                    thing.milDiameter = round2(moaToMils(getNumVal('thing-moaDiameter')));
-                    setVal('thing-milDiameter', round2(thing.milDiameter));
+                    thing.milDiameter = round3(moaToMils(getNumVal('thing-moaDiameter')));
+                    setVal('thing-milDiameter', round3(thing.milDiameter));
                 } else {
                     // Mils changed → update MOA
                     thing.milDiameter = getNumVal('thing-milDiameter');
-                    setVal('thing-moaDiameter', round2(milsToMoa(thing.milDiameter)));
+                    setVal('thing-moaDiameter', round3(milsToMoa(thing.milDiameter)));
                 }
             } else {
                 thing.height  = getNumVal('thing-height');
