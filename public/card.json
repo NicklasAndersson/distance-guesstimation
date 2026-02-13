@@ -15,8 +15,8 @@
       "height": 1.8,
       "width": 0.5,
       "imageDataUrl": "",
-      "offsetX": 5.074033621140852,
-      "offsetY": 13.571021969582018
+      "offsetX": 4.679772302965931,
+      "offsetY": 19.747782620989113
     },
     {
       "id": "imf",
@@ -24,8 +24,8 @@
       "height": 2.9,
       "width": 2.44,
       "imageDataUrl": "",
-      "offsetX": 41.82181624212997,
-      "offsetY": 7.525681757566562
+      "offsetX": 56.409485014602055,
+      "offsetY": 9.365567909049528
     },
     {
       "id": "doorFrame",
@@ -44,6 +44,14 @@
       "imageDataUrl": "",
       "offsetX": 38.98050698418407,
       "offsetY": 45.62238548471514
+    },
+    {
+      "id": "circle_1770993219708",
+      "type": "milCircle",
+      "name": "RPS",
+      "milDiameter": 1.16356,
+      "offsetX": 5.1,
+      "offsetY": 7.3
     }
   ]
 }
