@@ -4,10 +4,10 @@ const DEFAULT_CARD_DATA = {
     cordLength: 600,
     distances: [100, 200, 300, 400, 500, 600],
     things: [
-        { id: 'soldier',  name: 'Soldat',                   height: 1.8,  width: 0.5,  imageDataUrl: '', offsetX: 0, offsetY: 0 },
-        { id: 'imf',      name: 'Container kortsida ISO HC', height: 2.9,  width: 2.44, imageDataUrl: '', offsetX: 0, offsetY: 0 },
-        { id: 'doorFrame',name: 'Dörr',                      height: 2.0,  width: 1.0,  imageDataUrl: '', offsetX: 0, offsetY: 0 },
-        { id: 'v70',      name: 'Volvo V70',                 height: 1.44, width: 4.72, imageDataUrl: '', offsetX: 0, offsetY: 0 },
+        { id: 'soldier',  name: 'Soldat',                   height: 1.8,  width: 0.5,  imageDataUrl: '', offsetX: 1,  offsetY: 7  },
+        { id: 'imf',      name: 'Container kortsida ISO HC', height: 2.9,  width: 2.44, imageDataUrl: '', offsetX: 25, offsetY: 7  },
+        { id: 'doorFrame',name: 'Dörr',                      height: 2.0,  width: 1.0,  imageDataUrl: '', offsetX: 55, offsetY: 7  },
+        { id: 'v70',      name: 'Volvo V70',                 height: 1.44, width: 4.72, imageDataUrl: '', offsetX: 1,  offsetY: 38 },
     ]
 };
 
@@ -191,9 +191,9 @@ function attachDragHandlers(card) {
             const thing = cardData.things.find(t => t.id === dragging.thingId);
             if (!thing) return;
 
-            // Clamp within card bounds (allow slight overshoot to keep things partially visible)
-            thing.offsetX = clamp(dragging.origOffsetX + dx, -5, 110);
-            thing.offsetY = clamp(dragging.origOffsetY + dy, -5, 55);
+            // Clamp within card bounds (allow overshoot so objects can be partially outside)
+            thing.offsetX = clamp(dragging.origOffsetX + dx, -20, 115);
+            thing.offsetY = clamp(dragging.origOffsetY + dy, -20, 60);
 
             // Live preview on this subcard only (don't full re-render during drag)
             sc.style.left = thing.offsetX + 'mm';
@@ -431,8 +431,26 @@ function wireEditor() {
         afterDataChange(true);
     });
 
+    // Print mode
+    on('print-mode-btn', 'click', () => {
+        document.body.classList.add('print-mode');
+    });
+
+    on('exit-print-mode-btn', 'click', () => {
+        document.body.classList.remove('print-mode');
+    });
+
+    on('print-now-btn', 'click', () => {
+        window.print();
+    });
+
     // Keyboard shortcuts
     document.addEventListener('keydown', e => {
+        // Escape exits print mode
+        if (e.key === 'Escape' && document.body.classList.contains('print-mode')) {
+            document.body.classList.remove('print-mode');
+            return;
+        }
         // Don't trigger shortcuts when typing in input fields
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }

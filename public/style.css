@@ -22,11 +22,9 @@
 }
 
 .subcard {
-    margin: 1mm;
     font-family: 'Courier New', Courier, monospace;
     font-size: x-small;
-    display: inline-block;
-    position: relative;
+    position: absolute;
     cursor: grab;
     user-select: none;
     touch-action: none;
@@ -188,15 +186,79 @@
     }
 }
 
+/* ── Print Preview mode (on-screen exact A4) ───────────────────────────── */
+
+body.print-mode {
+    margin-left: 0 !important;
+    background: #555;
+}
+
+body.print-mode .editor-panel {
+    display: none;
+}
+
+body.print-mode .subcard {
+    cursor: default;
+}
+
+body.print-mode .subcard.selected {
+    outline: none;
+}
+
+.print-mode-bar {
+    display: none;
+}
+
+body.print-mode .print-mode-bar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: #1a1a1a;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    z-index: 2000;
+}
+
+body.print-mode .print-mode-bar button {
+    padding: 5px 14px;
+    border: 1px solid #888;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+body.print-mode .print-mode-bar button:hover {
+    background: #555;
+}
+
+body.print-mode .sheet {
+    margin: 50px auto 10px auto;
+}
+
 /* ── Print: hide editor, reset margins ──────────────────────────────────── */
 
 @media print {
-    .editor-panel {
+    .editor-panel,
+    .print-mode-bar {
         display: none !important;
     }
 
     body {
         margin-left: 0 !important;
+        background: #fff !important;
+    }
+
+    .sheet {
+        margin: 0 !important;
     }
 
     .subcard {
