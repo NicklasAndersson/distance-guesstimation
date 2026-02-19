@@ -210,6 +210,11 @@
     flex: 1;
 }
 
+.btn-row select {
+    flex: 1;
+    min-width: 0;
+}
+
 /* ── Screen: make room for the editor panel ─────────────────────────────── */
 
 @media screen {

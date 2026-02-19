@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Soldat",
+    "height": 1.8,
+    "width": 0.5,
+    "imageDataUrl": ""
+  },
+  {
+    "name": "Container kortsida ISO HC",
+    "height": 2.9,
+    "width": 2.44,
+    "imageDataUrl": ""
+  },
+  {
+    "name": "Dörr",
+    "height": 2,
+    "width": 1,
+    "imageDataUrl": ""
+  },
+  {
+    "name": "Volvo V70",
+    "height": 1.44,
+    "width": 4.72,
+    "imageDataUrl": ""
+  },
+  {
+    "type": "milCircle",
+    "name": "RPS",
+    "milDiameter": 1.16356
+  }
+]

@@ -17,6 +17,7 @@ const IMAGE_MAX_BYTES = 200 * 1024; // 200 KB warning threshold
 
 let cardData = structuredClone(DEFAULT_CARD_DATA);
 let selectedThingId = null;
+let libraryItems = [];
 
 // ── Undo / Redo ─────────────────────────────────────────────────────────────
 
@@ -444,6 +445,27 @@ function wireEditor() {
         autoSave();
     });
 
+    // Add from library
+    on('add-from-library-btn', 'click', () => {
+        const sel = document.getElementById('library-select');
+        const idx = parseInt(sel.value, 10);
+        if (isNaN(idx) || !libraryItems[idx]) return;
+        pushUndo();
+        const template = structuredClone(libraryItems[idx]);
+        const isCircle = template.type === 'milCircle';
+        const id = (isCircle ? 'circle_' : 'thing_') + Date.now();
+        template.id = id;
+        template.offsetX = 0;
+        template.offsetY = 0;
+        if (!isCircle) template.imageDataUrl = template.imageDataUrl || '';
+        cardData.things.push(template);
+        selectedThingId = id;
+        populateThingSelect();
+        selectThing(id);
+        renderCard();
+        autoSave();
+    });
+
     // Add thing
     on('add-thing-btn', 'click', () => {
         pushUndo();
@@ -591,7 +613,7 @@ function loadFromStorage() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
             const parsed = JSON.parse(raw);
-            if (parsed && Array.isArray(parsed.things) && parsed.things.length > 0) {
+            if (parsed && Array.isArray(parsed.things)) {
                 cardData = parsed;
                 return true;
             }
@@ -678,6 +700,17 @@ function importJSON(e) {
 
 // ── Init ────────────────────────────────────────────────────────────────────
 
+function populateLibrarySelect() {
+    const sel = document.getElementById('library-select');
+    sel.innerHTML = '';
+    libraryItems.forEach((item, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = item.name;
+        sel.appendChild(opt);
+    });
+}
+
 window.onload = async function () {
     const hadLocalData = loadFromStorage();
 
@@ -694,9 +727,19 @@ window.onload = async function () {
         } catch (_) { /* no card.json available – start empty */ }
     }
 
+    // Load library items
+    try {
+        const resp = await fetch('library.json');
+        if (resp.ok) {
+            const json = await resp.json();
+            if (Array.isArray(json)) libraryItems = json;
+        }
+    } catch (_) { /* no library available */ }
+
     selectedThingId = cardData.things[0]?.id || null;
     populateGlobalFields();
     populateThingSelect();
+    populateLibrarySelect();
     if (selectedThingId) selectThing(selectedThingId);
     wireEditor();
     renderCard();
